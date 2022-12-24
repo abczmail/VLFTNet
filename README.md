@@ -1,1 +1,1 @@
-# SGATNet
+# VLFTNet
