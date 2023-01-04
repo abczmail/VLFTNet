@@ -4,6 +4,7 @@
 - [Data Preparation](#data-preparation)
 - [Training](#training)
 - [Evaluation](#evaluation)
+- [Reference and Citation](#reference-and-citation)
 
 ## Environment setup
 
@@ -23,7 +24,7 @@ python -m spacy download en_core_web_md
 ## Data Preparation
 
 * **Annotation**. Download the annotation file [annotation.zip](https://drive.google.com/file/d/1Zc2P3-MIBg3JcHT1qKeYuQt9CnQcY5XJ/view?usp=sharing) [1]. Extract and put it in the project root directory.
-* **Feature**. Download processed image features [ResNeXt-101](https://stduestceducn-my.sharepoint.com/:f:/g/personal/zhn_std_uestc_edu_cn/EssZY4Xdb0JErCk0A1Yx3vUBaRbXau88scRvYw4r1ZuwPg?e=f2QFGp) and [ResNeXt-152](https://stduestceducn-my.sharepoint.com/:f:/g/personal/zhn_std_uestc_edu_cn/EssZY4Xdb0JErCk0A1Yx3vUBaRbXau88scRvYw4r1ZuwPg?e=f2QFGp) features [2], put it in the project root directory.
+* **Feature**. Download processed image features [ResNeXt-101](https://pan.baidu.com/s/1lI1i_DQovfze_C7ztwQvfw?pwd=vlft) and [ResNeXt-152](https://pan.baidu.com/s/1XBACq2L-1ax0IacMZg3H7g?pwd=vlft) features [2] (code ```vlft```), put it in the project root directory.
 <!-- * **Evaluation**. Download the evaluation tools [here](https://pan.baidu.com/s/1xVZO7t8k4H_l3aEyuA-KXQ). Acess code: jcj6. Extarct and put it in the project root directory. -->
 
 
@@ -66,4 +67,5 @@ We provide pretrained model [here](https://drive.google.com/file/d/1Y133r4Wd9edi
 
 ### Online Evaluation
 We also report the performance of our model on the online COCO test server with an ensemble of four VLFTNet models. The detailed online test code can be obtained in this [repo](https://github.com/zhangxuying1004/RSTNet).
+
 
