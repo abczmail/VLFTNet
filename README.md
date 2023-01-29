@@ -4,7 +4,7 @@
 - [Data Preparation](#data-preparation)
 - [Training](#training)
 - [Evaluation](#evaluation)
-- [Reference](#reference-and-citation)
+- [Reference](#reference)
 
 ## Environment setup
 
