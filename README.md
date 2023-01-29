@@ -74,3 +74,4 @@ We also report the performance of our model on the online COCO test server with 
 Huang, and Rongrong Ji. Rstnet: Captioning with adaptive attention on visual and non-visual words. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 15465–15474, 2021.
 [3] Pengpeng Zeng, Haonan Zhang, Jingkuan Song, and Lianli Gao. S2 transformer for image captioning. In Proceedings of the International Joint Conferences on Artificial Intelligence, volume 5, 2022.
 
+
