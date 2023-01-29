@@ -4,7 +4,7 @@
 - [Data Preparation](#data-preparation)
 - [Training](#training)
 - [Evaluation](#evaluation)
-- [Reference and Citation](#reference-and-citation)
+- [Reference](#reference-and-citation)
 
 ## Environment setup
 
@@ -68,4 +68,9 @@ We provide pretrained model [here](https://pan.baidu.com/s/1aAHOfUyN2Je8TT4le5qy
 ### Online Evaluation
 We also report the performance of our model on the online COCO test server with an ensemble of four VLFTNet models. The detailed online test code can be obtained in this [repo](https://github.com/zhangxuying1004/RSTNet).
 
+## Reference
+[1] Cornia, M., Stefanini, M., Baraldi, L., & Cucchiara, R. (2020). Meshed-memory transformer for image captioning. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition.  
+[2] Xuying Zhang, Xiaoshuai Sun, Yunpeng Luo, Jiayi Ji, Yiyi Zhou, Yongjian Wu, Feiyue
+Huang, and Rongrong Ji. Rstnet: Captioning with adaptive attention on visual and non-visual words. In Proceedings of the IEEE/CVF Conference on Computer Vision and Pattern Recognition, pages 15465–15474, 2021.
+[3] Pengpeng Zeng, Haonan Zhang, Jingkuan Song, and Lianli Gao. S2 transformer for image captioning. In Proceedings of the International Joint Conferences on Artificial Intelligence, volume 5, 2022.
 
