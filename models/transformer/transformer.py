@@ -1,4 +1,3 @@
-from matplotlib import image
 import torch
 import torch.nn.functional as F
 from torch import nn
@@ -69,7 +68,7 @@ class Transformer(CaptioningModel):
         self.encoder = encoder
         self.decoder = decoder
         self.text_d_model = text_d_model
-        self.num_clusters=num_clusters
+        self.num_clusters = num_clusters
         self.padding_idx = padding_idx
         self.word_emb = nn.Embedding(vocab_size, text_d_model, padding_idx=padding_idx)
         self.pos_emb = nn.Embedding.from_pretrained(sinusoid_encoding_table(max_len + 1, text_d_model, 0), freeze=True)

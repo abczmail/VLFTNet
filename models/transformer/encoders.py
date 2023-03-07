@@ -10,36 +10,26 @@ from models.transformer.grid_aug import BoxRelationalEmbedding
 class CNN(nn.Module):
     def __init__(self):
         super(CNN, self).__init__()
-        # nn.Sequential一个有序的容器，神经网络模块将按照在传入构造器的顺序依次被添加到计算图中执行，
-        # 同时以神经网络模块为元素的有序字典也可以作为传入参数
-        # nn.Conv2d 二维卷积 先实例化再使用 在Pytorch的nn模块中，它是不需要你手动定义网络层的权重和偏置的
-        self.conv1 = nn.Sequential(  # input shape (1,28,28)
-            nn.Conv2d(in_channels=64,  # input height 必须手动提供 输入张量的channels数
-                      out_channels=16,  # n_filter 必须手动提供 输出张量的channels数
-                      kernel_size=5,  # filter size 必须手动提供 卷积核的大小
-                      # 如果左右两个数不同，比如3x5的卷积核，那么写作kernel_size = (3, 5)，注意需要写一个tuple，而不能写一个列表（list）
-                      stride=1,  # filter step 卷积核在图像窗口上每次平移的间隔，即所谓的步长
-                      padding=2  # con2d出来的图片大小不变 Pytorch与Tensorflow在卷积层实现上最大的差别就在于padding上
-                      ),  # output shape (16,28,28) 输出图像尺寸计算公式是唯一的 # O = （I - K + 2P）/ S +1
-            nn.ReLU(),  # 分段线性函数，把所有的负值都变为0，而正值不变，即单侧抑制
+        self.conv1 = nn.Sequential(
+            nn.Conv2d(in_channels=49,
+                      out_channels=49,
+                      kernel_size=5,
+                      stride=1,
+                      padding=2
+                      ),
+            nn.ReLU(),
             nn.MaxPool2d(kernel_size=1)
-            # 2x2采样，28/2=14，output shape (16,14,14) maxpooling有局部不变性而且可以提取显著特征的同时降低模型的参数，从而降低模型的过拟合
         )
-        self.conv2 = nn.Sequential(nn.Conv2d(16, 8, 5, 1, 2),  # output shape (32,7,7)
+        self.conv2 = nn.Sequential(nn.Conv2d(49, 49, 5, 1, 2),
                                    nn.ReLU(),
                                    nn.MaxPool2d(1))
-        # 因上述几层网络处理后的output为[32,7,7]的tensor，展开即为7*7*32的一维向量，接上一层全连接层，最终output_size应为10，即识别出来的数字总类别数
-        # 在二维图像处理的任务中，全连接层的输入与输出一般都设置为二维张量，形状通常为[batch_size, size]
-        # self.out = nn.Linear(32 * 7 * 7, 10)  # 全连接层 7*7*32, num_classes
+        self.out = nn.Linear(64, 8)
 
     def forward(self, x):
-        x = self.conv1(x)  # 卷一次
-        x = self.conv2(x)  # 卷两次
-        # x = x.view(x.size(0), -1)  # flat (batch_size, 32*7*7)
-        # 将前面多维度的tensor展平成一维 x.size(0)指batchsize的值
-        # view()函数的功能根reshape类似，用来转换size大小
-        # output = self.out(x)  # fc out全连接层 分类器
-        return x
+        x = self.conv1(x)
+        x = self.conv2(x)
+        output = self.out(x)
+        return output
 
 
 class SR(nn.Module):
@@ -107,12 +97,6 @@ class MultiLevelEncoder(nn.Module):
 
         # self.WGs = nn.ModuleList([nn.Sequential(nn.Linear(64, 1, bias=True), nn.LeakyReLU()) for _ in range(h)])
 
-        # self.MLP = nn.Sequential(
-        #     nn.Linear(N * d_model, N * d_model),
-        #     nn.LeakyReLU(),
-        #     nn.Linear(N * d_model, d_model),
-        #     nn.LeakyReLU()
-        # )
         self.cnn = CNN()
 
     def forward(self, input, attention_weights=None, pos=None):
@@ -132,15 +116,9 @@ class MultiLevelEncoder(nn.Module):
 
 
         relative_geometry_embeddings = BoxRelationalEmbedding(input)
-        relative_geometry_embeddings = relative_geometry_embeddings.permute(0, 3, 2, 1)
-        # flatten_relative_geometry_embeddings = relative_geometry_embeddings.view(-1, 64)
-        # box_size_per_head = list(relative_geometry_embeddings.shape[:3])
-        # box_size_per_head.insert(1, 1)
-        # relative_geometry_weights_per_head = [layer(flatten_relative_geometry_embeddings).view(box_size_per_head) for
-        #                                       layer in self.WGs]
-        # relative_geometry_weights = torch.cat((relative_geometry_weights_per_head), 1)
-        # relative_geometry_weights = F.relu(relative_geometry_weights)
+        # relative_geometry_embeddings = relative_geometry_embeddings.permute(0, 3, 2, 1)
         relative_geometry_weights = self.cnn(relative_geometry_embeddings)
+        relative_geometry_weights = relative_geometry_weights.permute(0, 3, 2, 1)
         relative_geometry_weights = F.relu(relative_geometry_weights)
 
         out = self.SR(input, self.layers, relative_geometry_weights, attention_mask, attention_weights, pos=pos)

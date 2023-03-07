@@ -48,3 +48,15 @@ class PositionWiseFeedForward(nn.Module):
             out = self.dropout(out)
             out = self.layer_norm(input + out)
         return out
+
+
+def in_norm(x_btc):
+
+    b, t, c = x_btc.size()
+    eps = 1e-6
+
+    mu = torch.sum(x_btc, dim=1) / t
+    sigma_square = torch.sum((x_btc - mu) ** 2, dim=1) / t
+    x_btc = (x_btc - mu) / torch.sqrt(sigma_square + eps)
+
+    return x_btc

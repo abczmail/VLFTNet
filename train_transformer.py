@@ -1,8 +1,10 @@
 import random
 import os
-os.environ["CUDA_VISIBLE_DEVICES"] = "3"
+os.environ["CUDA_VISIBLE_DEVICES"] = "2"
 from torch.nn.modules.loss import MSELoss
-from data import ImageDetectionsField, TextField, RawField
+from data import TextField, RawField
+from data import ImageDetectionsField # 此处修改使用ResNext101特征
+# from data import ImageDetectionsFieldX152 as ImageDetectionsField   # 此处修改使用ResNext152特征
 from data import COCO, DataLoader
 import evaluation
 from evaluation import PTBTokenizer, Cider
@@ -174,7 +176,7 @@ def _changeConfig(config, worldSize):
 
 def _generalConfig(rank: int, worldSize: int):
     os.environ["MASTER_ADDR"] = "localhost"
-    os.environ["MASTER_PORT"] = "2235" #任意一个没被占用的端口号
+    os.environ["MASTER_PORT"] = "2233" #任意一个没被占用的端口号
     torch.autograd.set_detect_anomaly(False)
     torch.backends.cudnn.benchmark = True
     random.seed(1234)
@@ -210,7 +212,8 @@ def train(rank, worldSize, args):
 
     # Model and dataloaders
     encoder = TransformerEncoder(3, 0, attention_module=ScaledDotProductAttention, attention_module_kwargs={'m': args.m})
-    decoder = TransformerDecoderLayer(len(text_field.vocab), 54, 3, text_field.vocab.stoi['<pad>'])
+    # decoder = TransformerDecoderLayer(len(text_field.vocab), 54, 3, text_field.vocab.stoi['<pad>'])
+    decoder = TransformerDecoderLayer(len(text_field.vocab), 54, 3, text_field.vocab.stoi['<pad>'], language_model_path='./saved_language_models/language_context.pth')
 
     model = Transformer(text_field.vocab.stoi['<bos>'], encoder, decoder, args.num_clusters, len(text_field.vocab), 54, text_field.vocab.stoi['<pad>'], 512)
     model = torch.nn.parallel.DistributedDataParallel(model.to(rank), device_ids=[rank], output_device=rank, broadcast_buffers=False, find_unused_parameters=True)

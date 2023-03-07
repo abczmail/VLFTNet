@@ -1,4 +1,4 @@
-from .field import RawField, Merge, ImageDetectionsField, TextField
+from .field import RawField, Merge, ImageDetectionsField, TextField, ImageDetectionsFieldX152
 from .dataset import COCO, COCO_TestOnline
 from torch.utils.data import DataLoader as TorchDataLoader
 

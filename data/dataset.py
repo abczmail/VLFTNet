@@ -308,8 +308,8 @@ class COCO_TestOnline(Dataset):
 
     def __getitem__(self, idx):
         image_id = self.images_info[idx]['id']
-        # precomp_data = self.f['%d_grids' % image_id][()]
-        precomp_data = self.f['%d_features' % image_id][()]
+        precomp_data = self.f['%d_grids' % image_id][()]
+        # precomp_data = self.f['%d_features' % image_id][()]
         delta = self.max_detections - precomp_data.shape[0]
         if delta > 0:
             precomp_data = np.concatenate([precomp_data, np.zeros((delta, precomp_data.shape[1]))], axis=0)
